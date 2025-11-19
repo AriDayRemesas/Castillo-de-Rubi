@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Guerra de Castillos</title>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- Pantalla inicial -->
+    <section id="start-screen" class="screen active">
+      <div class="card start-card">
+        <h1>🏰 Guerra de Castillos</h1>
+        <p class="subtitle">RPG de texto inspirado en batallas de castillos, para un solo jugador.</p>
+
+        <label class="field">
+          <span>Nombre de tu héroe</span>
+          <input type="text" id="input-name" maxlength="20" placeholder="Escribe tu nombre...">
+        </label>
+
+        <div class="field">
+          <span>Elige tu castillo</span>
+          <div id="castle-options" class="castle-options">
+            <button type="button" class="castle-option" data-castle="picas">♠️ Castillo Picas</button>
+            <button type="button" class="castle-option" data-castle="trebol">♣️ Castillo Trébol</button>
+            <button type="button" class="castle-option" data-castle="corazon">♥️ Castillo Corazón</button>
+            <button type="button" class="castle-option" data-castle="diamante">♦️ Castillo Diamante</button>
+          </div>
+        </div>
+
+        <button id="btn-start" class="btn primary full">Comenzar aventura</button>
+
+        <div id="continue-box" class="continue-box hidden">
+          <hr>
+          <p>Ya tienes una partida guardada.</p>
+          <button id="btn-continue" class="btn secondary full">Continuar partida</button>
+          <button id="btn-delete-save" class="btn danger full">Borrar partida y empezar de cero</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pantalla de juego -->
+    <section id="game-screen" class="screen hidden">
+      <!-- Barra superior -->
+      <header id="top-bar">
+        <div class="top-main">
+          <div class="top-line">
+            <span id="top-name" class="top-name"></span>
+            <span id="top-castle" class="top-castle"></span>
+          </div>
+          <div class="top-line">
+            <span id="top-class" class="top-class"></span>
+            <span id="top-level" class="top-level"></span>
+          </div>
+          <div class="top-line">
+            <span id="top-gold" class="top-gold">💰 0</span>
+            <span id="top-energy" class="top-energy">⚡ 0/0</span>
+          </div>
+        </div>
+        <div class="top-xp">
+          <div id="xp-bar" class="xp-bar">
+            <div id="xp-fill" class="xp-fill"></div>
+          </div>
+          <span id="xp-text" class="xp-text">XP 0 / 0</span>
+        </div>
+      </header>
+
+      <!-- Layout principal -->
+      <main id="layout">
+        <nav id="main-nav">
+          <button class="nav-btn active" data-panel="panel-main">🏠 Principal</button>
+          <button class="nav-btn" data-panel="panel-adventures">🗺️ Aventuras</button>
+          <button class="nav-btn" data-panel="panel-professions">🪓 Profesiones</button>
+          <button class="nav-btn" data-panel="panel-crafting">⚒️ Crafteo</button>
+          <button class="nav-btn" data-panel="panel-arena">⚔️ Arena</button>
+          <button class="nav-btn" data-panel="panel-war">🚩 Guerra</button>
+          <button class="nav-btn" data-panel="panel-guild">🧱 Gremio</button>
+          <button class="nav-btn" data-panel="panel-market">📦 Mercado</button>
+        </nav>
+
+        <section id="content">
+          <!-- Panel principal -->
+          <div id="panel-main" class="panel active">
+            <h2>🏠 Principal</h2>
+            <div id="player-summary" class="card"></div>
+
+            <div class="card">
+              <h3>Clases</h3>
+              <p id="class-info">
+                Al llegar a nivel 3 podrás elegir una clase para tu héroe.
+              </p>
+              <div id="class-choice" class="class-choice hidden">
+                <p>Elige tu camino:</p>
+                <div class="class-buttons">
+                  <button class="btn secondary" data-class="guerrero">🗡️ Guerrero</button>
+                  <button class="btn secondary" data-class="arquero">🏹 Arquero</button>
+                  <button class="btn secondary" data-class="mago">✨ Mago</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Inventario</h3>
+              <div id="inventory-list"></div>
+            </div>
+          </div>
+
+          <!-- Panel Aventuras -->
+          <div id="panel-adventures" class="panel hidden">
+            <h2>🗺️ Aventuras</h2>
+            <p>Usa energía para explorar distintas zonas, ganar experiencia, oro y recursos.</p>
+            <div id="adventure-list"></div>
+          </div>
+
+          <!-- Panel Profesiones -->
+          <div id="panel-professions" class="panel hidden">
+            <h2>🪓 Profesiones</h2>
+            <p>Recolecta recursos para el crafteo y el mercado.</p>
+            <div id="profession-list" class="card"></div>
+          </div>
+
+          <!-- Panel Crafteo -->
+          <div id="panel-crafting" class="panel hidden">
+            <h2>⚒️ Crafteo</h2>
+            <p>Convierte recursos en equipo y objetos útiles.</p>
+            <div id="crafting-list" class="card"></div>
+          </div>
+
+          <!-- Panel Arena -->
+          <div id="panel-arena" class="panel hidden">
+            <h2>⚔️ Arena</h2>
+            <p>Enfréntate a oponentes controlados por la IA para ganar rating, oro y experiencia.</p>
+            <div class="card">
+              <button id="btn-arena-fight" class="btn primary full">Buscar oponente</button>
+              <div id="arena-result" class="mt"></div>
+            </div>
+          </div>
+
+          <!-- Panel Guerra de Castillos -->
+          <div id="panel-war" class="panel hidden">
+            <h2>🚩 Guerra de Castillos</h2>
+            <div class="card">
+              <p id="war-info"></p>
+              <button id="btn-war-join" class="btn primary full">Anotar participación</button>
+              <div id="war-history" class="mt"></div>
+            </div>
+          </div>
+
+          <!-- Panel Gremio -->
+          <div id="panel-guild" class="panel hidden">
+            <h2>🧱 Gremio</h2>
+            <div id="guild-info" class="card"></div>
+          </div>
+
+          <!-- Panel Mercado -->
+          <div id="panel-market" class="panel hidden">
+            <h2>📦 Mercado</h2>
+            <div class="card">
+              <h3>Ofertas de comerciantes</h3>
+              <div id="market-offers"></div>
+            </div>
+            <div class="card">
+              <h3>Vender objetos</h3>
+              <div id="market-sell"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Panel de chat / log -->
+        <aside id="chat">
+          <div class="chat-header">
+            <h3>💬 Registro</h3>
+          </div>
+          <div id="chat-messages"></div>
+        </aside>
+      </main>
+    </section>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
